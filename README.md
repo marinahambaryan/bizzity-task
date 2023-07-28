@@ -13,8 +13,7 @@ You can Move the Elements back and forth by changing their order using the Layer
 Click on the Navigation Icon. You may see list of elements corresponding the Card elements on the Greed.
 Drag and drop to change the order of the elements.
 
-
-You can move the card elements 'Up' or 'Down'. 
+You can move the card elements 'Up' or 'Down'.
 Righ clicking on the card so you can see a context menu. Click on the action ('Up' or 'Down') you want to apply.
 You might notice that the 'Up' action moved the card to the end of the list. 'Down' action moves the element to the beginning of the list.
 

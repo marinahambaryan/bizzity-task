@@ -8,12 +8,7 @@ import ContextMenu from "./ContextMenu";
 import CustomGridItem from "./CustomGridItem";
 
 const ReactGridLayout = WidthProvider(RGL);
-const Grid = ({
-  layout,
-  handleMoveToBack,
-  handleMoveToFront,
-  setLayout,
-}) => {
+const Grid = ({ layout, handleMoveToBack, handleMoveToFront, setLayout }) => {
   const [clickedItem, setClickedItem] = useState(null);
   const [contextMenuCoordinates, setContextMenuCoordinates] = useState(null);
   const [selectedElements, setSelectedElements] = useState([]);
@@ -40,13 +35,27 @@ const Grid = ({
     const layoutCopy = newLayout.map((el) => ({ ...el }));
 
     if (selectedElements.length > 0 && selectedElements.includes(newItem.i)) {
+      // const selectedObj = {}
+      // selectedElements.forEach((element) => {
+      //   selectedObj[element] = true
+      // })
+      // layoutCopy.map(card => {
+      //   if(card.i !== newItem.i) {
+      //     const newXValue = elementInNewLayout.x + delta.x;
+      //     const newYValue = elementInNewLayout.y + delta.y;
+      //     card
+      //   }
+      // })
       selectedElements.forEach((elementIdx) => {
-        const elementInNewLayout = layoutCopy[elementIdx];
+        const layoutElementIndex = layoutCopy.findIndex(
+          (e) => e.i === elementIdx,
+        );
+        const elementInNewLayout = layoutCopy[layoutElementIndex];
         if (elementIdx !== newItem.i) {
           const newXValue = elementInNewLayout.x + delta.x;
           const newYValue = elementInNewLayout.y + delta.y;
-          layoutCopy[elementIdx] = {
-            ...layoutCopy[elementIdx],
+          layoutCopy[layoutElementIndex] = {
+            ...layoutCopy[layoutElementIndex],
             x: newXValue > 0 ? newXValue : 0,
             y: newYValue > 0 ? newYValue : 0,
           };
