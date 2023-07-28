@@ -8,7 +8,7 @@ import ContextMenu from "./ContextMenu";
 import CustomGridItem from "./CustomGridItem";
 
 const ReactGridLayout = WidthProvider(RGL);
-const AllowOverlap = ({
+const Grid = ({
   layout,
   handleMoveToBack,
   handleMoveToFront,
@@ -17,7 +17,7 @@ const AllowOverlap = ({
   const [clickedItem, setClickedItem] = useState(null);
   const [contextMenuCoordinates, setContextMenuCoordinates] = useState(null);
   const [selectedElements, setSelectedElements] = useState([]);
-  
+
   const handleItemClick = (e, item) => {
     setClickedItem(item);
     setContextMenuCoordinates({ x: e.pageX, y: e.pageY });
@@ -93,4 +93,4 @@ const AllowOverlap = ({
   );
 };
 
-export default AllowOverlap;
+export default Grid;

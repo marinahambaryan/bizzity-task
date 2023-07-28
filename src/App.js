@@ -67,7 +67,7 @@ function App() {
   };
 
   return (
-    <Box className="App">
+    <Box>
       <Grid
         layout={layout}
         handleMoveToFront={handleMoveToFront}
