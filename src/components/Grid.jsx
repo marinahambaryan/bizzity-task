@@ -18,8 +18,6 @@ const AllowOverlap = ({
   const [coordinates, setCoordinates] = useState(null);
 
   const [selectedElements, setSelectedElements] = useState([]);
-  const [delta, setDelta] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
   const handleItemClick = (e, item) => {
     setClickedItem(item);
     setCoordinates({ x: e.pageX, y: e.pageY });
@@ -30,46 +28,42 @@ const AllowOverlap = ({
   };
 
   const handleItemSelection = (item) => {
-    if(!selectedElements.includes(item.i)){
-        setSelectedElements([...selectedElements, item.i]);
+    if (!selectedElements.includes(item.i)) {
+      setSelectedElements([...selectedElements, item.i]);
     } else {
-        setSelectedElements(selectedElements.filter((el) => el !== item.i))
+      setSelectedElements(selectedElements.filter((el) => el !== item.i));
     }
   };
 
-const handleOnDragStop = (newLayout, oldItem, newItem) => {
-    const delta = { x: newItem.x - oldItem.x, y: newItem.y - oldItem.y }
-    const layoutCopy = newLayout.map(el => ({...el}));
+  const handleOnDragStop = (newLayout, oldItem, newItem) => {
+    const delta = { x: newItem.x - oldItem.x, y: newItem.y - oldItem.y };
+    const layoutCopy = newLayout.map((el) => ({ ...el }));
 
     if (selectedElements.length > 0 && selectedElements.includes(newItem.i)) {
       selectedElements.forEach((elementIdx) => {
-        const elementInNewLayout = layoutCopy[elementIdx]
-        if(elementIdx !== newItem.i) {
-            const newXValue = elementInNewLayout.x + delta.x
-            const newYValue = elementInNewLayout.y + delta.y
-            layoutCopy[elementIdx] = {
-                ...layoutCopy[elementIdx],
-                x: newXValue > 0 ? newXValue : 0,
-                y: newYValue > 0 ? newYValue : 0,
-              };
+        const elementInNewLayout = layoutCopy[elementIdx];
+        if (elementIdx !== newItem.i) {
+          const newXValue = elementInNewLayout.x + delta.x;
+          const newYValue = elementInNewLayout.y + delta.y;
+          layoutCopy[elementIdx] = {
+            ...layoutCopy[elementIdx],
+            x: newXValue > 0 ? newXValue : 0,
+            y: newYValue > 0 ? newYValue : 0,
+          };
         }
       });
     }
     setLayout(layoutCopy);
-}
+  };
   return (
     <Box onClick={handleContextMenuReset}>
       <ReactGridLayout
         layout={layout}
         useCSSTransforms={true}
         allowOverlap={true}
-        onDragStop={(...args) => {
-          setIsDragging(false);
-          handleOnDragStop(...args)
-        }}
+        onDragStop={handleOnDragStop}
         rowHeight={30}
         isResizable={false}
-        onDragStart={() => setIsDragging(true)}
       >
         {_.map(layout, (item) => {
           return (
@@ -80,8 +74,6 @@ const handleOnDragStop = (newLayout, oldItem, newItem) => {
                 handleItemClick={handleItemClick}
                 handleItemSelection={handleItemSelection}
                 isSelected={selectedElements.includes(item.i)}
-                isDragging={false}
-                delta={delta}
               />
             </Box>
           );

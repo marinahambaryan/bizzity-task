@@ -7,8 +7,6 @@ const CustomGridItem = ({
   isClicked,
   handleItemSelection,
   isSelected,
-  isDragging,
-  delta,
 }) => {
   const manageElementClick = (e) => {
     if (e.shiftKey) {
