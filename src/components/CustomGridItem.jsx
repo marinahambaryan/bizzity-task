@@ -11,17 +11,10 @@ const CustomGridItem = ({
   delta,
 }) => {
   const manageElementClick = (e) => {
-    console.log({ e }, e.shiftKey);
     if (e.shiftKey) {
       handleItemSelection(item);
     }
   };
-  console.log({ isDragging, isSelected, x: delta.x, y: delta.y, item: item.i });
-  const transform =
-    (isSelected && !!delta?.x) || !!delta?.y
-      ? { transform: `translate(${delta.x}px, ${delta.y}px)` }
-      : {};
-  console.log((isSelected && !!delta?.x) || !!delta?.y);
   return (
     <Box
       style={{
@@ -33,7 +26,6 @@ const CustomGridItem = ({
         borderRadius: 1,
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         height: "100%",
-        transform,
       }}
       key={item.i}
       onContextMenu={(e) => {

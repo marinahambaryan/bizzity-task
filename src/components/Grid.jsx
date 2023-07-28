@@ -10,16 +10,15 @@ import CustomGridItem from "./CustomGridItem";
 const ReactGridLayout = WidthProvider(RGL);
 const AllowOverlap = ({
   layout,
-  handleDragStop,
   handleMoveToBack,
   handleMoveToFront,
-  handleMultipleDragging,
+  setLayout,
 }) => {
   const [clickedItem, setClickedItem] = useState(null);
   const [coordinates, setCoordinates] = useState(null);
 
-  const [selectedElements, setSelectedElements] = useState({});
-  const [delta, setDelta] = useState(0);
+  const [selectedElements, setSelectedElements] = useState([]);
+  const [delta, setDelta] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const handleItemClick = (e, item) => {
     setClickedItem(item);
@@ -31,50 +30,33 @@ const AllowOverlap = ({
   };
 
   const handleItemSelection = (item) => {
-    const newSelectedElements = { ...selectedElements };
-    if (selectedElements?.[item.i]) {
-      delete newSelectedElements[item.i];
+    if(!selectedElements.includes(item.i)){
+        setSelectedElements([...selectedElements, item.i]);
     } else {
-      newSelectedElements[item.i] = item;
+        setSelectedElements(selectedElements.filter((el) => el !== item.i))
     }
-    setSelectedElements(newSelectedElements);
   };
 
-  const handleDrag = (layout, oldItem, newItem) => {
-    setDelta({ x: newItem.x - oldItem.x, y: newItem.y - oldItem.y });
-    // const newLayout = [...layout];
-    // if (Object.keys(selectedElements).length > 0) {
-    //   // newLayout?.forEach((item, index) => {
-    //   //   if (selectedElements?.[item.i]) {
-    //   //     newLayout[index] = { ...item, x: item.x + dx, y: item.y + dy };
-    //   //   }
-    //   // });
-    //   Object.values(selectedElements).forEach((element) => {
-    //     newLayout[element.i] = {
-    //       ...newLayout[element.i],
-    //       x: newItem.x,
-    //       y: newItem.y,
-    //     };
-    //   });
-    // }
-    // // console.log({newLayout})
-    // handleMultipleDragging(newLayout);
-  };
-  const handleCLick = () => {
-    const newLayout = [...layout];
-    newLayout[0] = {
-      ...newLayout[0],
-      x: newLayout[0].x + 3,
-      y: newLayout[0].y + 3,
-    };
-    newLayout[1] = {
-      ...newLayout[1],
-      x: newLayout[1].x + 3,
-      y: newLayout[1].y + 3,
-    };
-    handleMultipleDragging(newLayout);
-  };
+const handleOnDragStop = (newLayout, oldItem, newItem) => {
+    const delta = { x: newItem.x - oldItem.x, y: newItem.y - oldItem.y }
+    const layoutCopy = newLayout.map(el => ({...el}));
 
+    if (selectedElements.length > 0 && selectedElements.includes(newItem.i)) {
+      selectedElements.forEach((elementIdx) => {
+        const elementInNewLayout = layoutCopy[elementIdx]
+        if(elementIdx !== newItem.i) {
+            const newXValue = elementInNewLayout.x + delta.x
+            const newYValue = elementInNewLayout.y + delta.y
+            layoutCopy[elementIdx] = {
+                ...layoutCopy[elementIdx],
+                x: newXValue > 0 ? newXValue : 0,
+                y: newYValue > 0 ? newYValue : 0,
+              };
+        }
+      });
+    }
+    setLayout(layoutCopy);
+}
   return (
     <Box onClick={handleContextMenuReset}>
       <ReactGridLayout
@@ -83,11 +65,10 @@ const AllowOverlap = ({
         allowOverlap={true}
         onDragStop={(...args) => {
           setIsDragging(false);
-          handleDragStop(...args);
+          handleOnDragStop(...args)
         }}
         rowHeight={30}
         isResizable={false}
-        onDrag={(...args) => handleDrag(...args)}
         onDragStart={() => setIsDragging(true)}
       >
         {_.map(layout, (item) => {
@@ -98,8 +79,8 @@ const AllowOverlap = ({
                 item={item}
                 handleItemClick={handleItemClick}
                 handleItemSelection={handleItemSelection}
-                isSelected={!!selectedElements?.[item.i]}
-                isDragging={isDragging}
+                isSelected={selectedElements.includes(item.i)}
+                isDragging={false}
                 delta={delta}
               />
             </Box>
@@ -112,7 +93,6 @@ const AllowOverlap = ({
           handleMoveToBack={() => handleMoveToBack(clickedItem.i)}
           item={clickedItem}
           coordinates={coordinates}
-          delta={delta}
         />
       )}
     </Box>

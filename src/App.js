@@ -58,29 +58,11 @@ function App() {
     }
   };
 
-  const handleDragStop = (layout, oldItem, newItem) => {
-    console.log({ oldItem, newItem });
-    if (newItem.y === oldItem.y && newItem.x === oldItem.x) return;
-    const newLayout = [...layout].map((item) => {
-      if (item.i === newItem.i) {
-        item.x = newItem.x;
-        item.y = newItem.y;
-      }
-      return item;
-    });
-    console.log("aaaaaaaaaa", newLayout);
-    setLayout(newLayout);
-  };
-
   const handleLayoutLayering = (newIndex, oldIndex) => {
     let changingItem = layout[oldIndex];
     const newLayout = [...layout];
     newLayout.splice(oldIndex, 1);
     newLayout.splice(newIndex, 0, changingItem);
-    setLayout(newLayout);
-  };
-
-  const handleMultipleDragging = (newLayout) => {
     setLayout(newLayout);
   };
 
@@ -90,8 +72,7 @@ function App() {
         layout={layout}
         handleMoveToFront={handleMoveToFront}
         handleMoveToBack={handleMoveToBack}
-        handleDragStop={handleDragStop}
-        handleMultipleDragging={handleMultipleDragging}
+        setLayout={setLayout}
       />
       <Layers layout={layout} handleLayoutLayering={handleLayoutLayering} />
     </Box>
