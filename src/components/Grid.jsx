@@ -15,12 +15,12 @@ const AllowOverlap = ({
   setLayout,
 }) => {
   const [clickedItem, setClickedItem] = useState(null);
-  const [coordinates, setCoordinates] = useState(null);
-
+  const [contextMenuCoordinates, setContextMenuCoordinates] = useState(null);
   const [selectedElements, setSelectedElements] = useState([]);
+  
   const handleItemClick = (e, item) => {
     setClickedItem(item);
-    setCoordinates({ x: e.pageX, y: e.pageY });
+    setContextMenuCoordinates({ x: e.pageX, y: e.pageY });
   };
 
   const handleContextMenuReset = () => {
@@ -55,6 +55,7 @@ const AllowOverlap = ({
     }
     setLayout(layoutCopy);
   };
+
   return (
     <Box onClick={handleContextMenuReset}>
       <ReactGridLayout
@@ -66,6 +67,7 @@ const AllowOverlap = ({
         isResizable={false}
       >
         {_.map(layout, (item) => {
+          const isSelected = selectedElements.includes(item.i);
           return (
             <Box key={item.i}>
               <CustomGridItem
@@ -73,7 +75,7 @@ const AllowOverlap = ({
                 item={item}
                 handleItemClick={handleItemClick}
                 handleItemSelection={handleItemSelection}
-                isSelected={selectedElements.includes(item.i)}
+                isSelected={isSelected}
               />
             </Box>
           );
@@ -84,7 +86,7 @@ const AllowOverlap = ({
           handleMoveToFront={() => handleMoveToFront(clickedItem.i)}
           handleMoveToBack={() => handleMoveToBack(clickedItem.i)}
           item={clickedItem}
-          coordinates={coordinates}
+          coordinates={contextMenuCoordinates}
         />
       )}
     </Box>

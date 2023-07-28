@@ -13,6 +13,7 @@ const CustomGridItem = ({
       handleItemSelection(item);
     }
   };
+
   return (
     <Box
       style={{
